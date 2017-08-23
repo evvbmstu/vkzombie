@@ -23,7 +23,5 @@ def processing():
                 return 'ok'
         elif newJson['type'] == "confirmation":
                 return '9f3fba60'
-    else:
-        return jsonify ( {"pasha":"privet"} )
 if __name__ == "__main__":
     app.run()
