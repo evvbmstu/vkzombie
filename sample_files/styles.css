@@ -1,0 +1,150 @@
+
+#rasp-table table.htCore > tbody > tr:nth-child(2) > td:nth-child(2)
+{
+	background : #DCA31A url('img/day-1.png') no-repeat center center;
+}
+#rasp-table table.htCore > tbody > tr:nth-child(16) > td:nth-child(2)
+{
+	background : #7DA700 url('img/day-2.png') no-repeat center center;
+}
+#rasp-table table.htCore > tbody > tr:nth-child(30) > td:nth-child(2)
+{
+	background : #26C3A6 url('img/day-3.png') no-repeat center center;
+}
+#rasp-table table.htCore > tbody > tr:nth-child(44) > td:nth-child(2)
+{
+	background : #A952C6 url('img/day-4.png') no-repeat center center;
+}
+#rasp-table table.htCore > tbody > tr:nth-child(58) > td:nth-child(2)
+{
+	background : #D82F6A url('img/day-5.png') no-repeat center center;
+}
+#rasp-table table.htCore > tbody > tr:nth-child(72) > td:nth-child(2)
+{
+	background : #D5D82F url('img/day-6.png') no-repeat center center;
+}
+#rasp-table table.htCore > tbody > tr:nth-child(1) > td
+{
+	vertical-align : middle !important;
+}
+#rasp-table table.htCore > tbody > tr > td:nth-child(3)
+{
+	vertical-align : middle !important;
+	border-right   : 2px solid #ccc;
+}
+#rasp-table table.htCore > tbody > tr > td:nth-child(4)
+{
+	vertical-align	: middle !important;
+	color			: #ccc;
+}
+
+#rasp-table table.htCore > tbody > tr:nth-child(even) > td
+{
+	border-top : 1px solid #ccc;
+}
+
+#scroll_fixed_left_0	{ background-color:#DCA31A; padding:5px; color:white;	}
+#scroll_fixed_left_1	{ background-color:#7DA700; padding:5px; color:white;	}
+#scroll_fixed_left_2	{ background-color:#26C3A6; padding:5px; color:white;	}
+#scroll_fixed_left_3	{ background-color:#A952C6; padding:5px; color:white;	}
+#scroll_fixed_left_4	{ background-color:#D82F6A; padding:5px; color:white;	}
+#scroll_fixed_left_5	{ background-color:#D5D82F; padding:5px; color:white;	}
+
+.scroll_fixed_top,
+.scroll_fixed_left
+{	
+	font-weight : bold;
+	min-width : 90px;
+	transition: opacity 2s ease, visibility 0.5s ease;
+}
+.scroll_fixed_top.hide,
+.scroll_fixed_left.hide 
+{
+	opacity: 0;
+	visibility: hidden;
+}
+.scroll_fixed_top	
+{ 
+	background-color: white; 
+	padding : 5px 5px 5px 0;
+	font-size : 120%;
+}
+
+
+#rasp-table table.htCore > tbody > tr:nth-child(1) > td		{	border-bottom : 5px solid #DCA31A;	}
+#rasp-table table.htCore > tbody > tr:nth-child(2) > td:nth-child(2),
+#rasp-table table.htCore > tbody > tr:nth-child(14) > td:nth-child(3),
+#rasp-table table.htCore > tbody > tr:nth-child(15) > td	{	border-bottom : 5px solid #7DA700;	}
+#rasp-table table.htCore > tbody > tr:nth-child(16) > td:nth-child(2),
+#rasp-table table.htCore > tbody > tr:nth-child(28) > td:nth-child(3),
+#rasp-table table.htCore > tbody > tr:nth-child(29) > td	{	border-bottom : 5px solid #26C3A6;	}
+#rasp-table table.htCore > tbody > tr:nth-child(30) > td:nth-child(2),
+#rasp-table table.htCore > tbody > tr:nth-child(42) > td:nth-child(3),
+#rasp-table table.htCore > tbody > tr:nth-child(43) > td	{	border-bottom : 5px solid #A952C6;	}
+#rasp-table table.htCore > tbody > tr:nth-child(44) > td:nth-child(2),
+#rasp-table table.htCore > tbody > tr:nth-child(56) > td:nth-child(3),
+#rasp-table table.htCore > tbody > tr:nth-child(57) > td	{	border-bottom : 5px solid #D82F6A;	}
+#rasp-table table.htCore > tbody > tr:nth-child(58) > td:nth-child(2),
+#rasp-table table.htCore > tbody > tr:nth-child(70) > td:nth-child(3),
+#rasp-table table.htCore > tbody > tr:nth-child(71) > td	{	border-bottom : 5px solid #D5D82F;	}
+/*
+#rasp-table table.htCore > tbody > tr:nth-child(2) > td:nth-child(2)
+{
+	color			: white;
+	vertical-align 	: middle;
+	text-align		: center;
+	font-weight 	: bold;
+}
+*/
+#rasp-table table.htCore > tbody > tr:first-child > td
+{
+	font-weight: bold;
+}
+#rasp-table table.htCore > tbody > tr > td:nth-child(n+3) 
+{
+	vertical-align	: middle !important;
+}
+#rasp-table table.htCore > tbody > tr > td.selected-class{
+	
+	background-color : yellow;
+}
+#example1 > .htContainer:first-child > .ht_master:first-child > .wtHider:first-child > .wtSpreader:first-child > table.htCore > tbody > tr > td,
+#example1 > .htContainer:first-child > .ht_master:first-child > .wtHider:first-child > .wtSpreader:first-child > table.htCore > tbody > tr > th
+{
+	height : 20px !important;
+	padding : 0 1px;
+	line-height:100%;
+	overflow:hidden;
+}
+.handsontable .ht_master table.htCore > tbody > tr:first-child > td:nth-child(n+5)
+{
+	height : auto !important;
+	font-size : 140%;
+	padding : 5px 0;
+	overflow : visible;
+}
+.ht_clone_left.handsontable,
+.ht_clone_top.handsontable,
+.ht_clone_corner.handsontable
+{
+	position:fixed !important;
+}
+.ht_clone_left.handsontable,
+.ht_clone_top.handsontable,
+.ht_clone_corner.handsontable
+{
+	display: none;
+}
+.ht_clone_left.handsontable table.htCore
+{
+
+
+}
+.handsontable .handsontable table
+{
+	box-shadow : none !important;
+}
+.handsontable .htDimmed
+{
+	color : #000;
+}
