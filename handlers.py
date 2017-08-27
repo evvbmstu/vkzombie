@@ -1,26 +1,34 @@
 # -*- coding: utf-8 -*-
 
 import re
-from controller import getResults
+from controller import getResults,checkIn
 from settings import *
 import sys
+import MySQLdb
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
 #Handling all messages.
-def handler( string ):
+def handler( string, vkId ):
     if " " in string:
-        parts = string.split(" ")
-        command = unicode(parts[0],'utf-8').upper()
+        parts = string.split( " " )
+        command = unicode( parts[0], 'utf-8' ).upper()
         
 	if command in commands['session']:
             group, surname = formatter( parts )
 	    results = getResults( group, surname )
 	    return results
+	elif command in commands['registration']:
+	    group, surname = formatter( parts )
+	    results =  checkIn ( vkId, surname, group )
+	    return results
         else:
-            return None
+            return "Команда не найдена "
     else:
-        return None
+        if unicode( string, 'utf-8' ).upper()  in commands['session']:
+	    group, surname = getFromDb( vkId )
+	    results = getResults( group, surname )
+	    return results
 
 # Format input text ( group, name )
 def formatter( parts ):
@@ -38,7 +46,7 @@ def formatter( parts ):
             digits = '-' + digits
 
         elif str(index) == "ИУ" and digits[:2] == "10":
-            digits = digits[0:2] + '-' + digits[2:len(digits)] 
+            digits = digits[0:2] + '-' + digits[2:len(digits)]
             
         elif str(index) == "МТ" and digits[:2] == "10":
             digits = digits[0:2] + '-' + digits[2:len(digits)]
@@ -55,7 +63,7 @@ def formatter( parts ):
         elif str(index) == "СМ" and len(digits) == 4 and (digits[:2] == "12" or digits[:2] == "13") :
             digits = digits[0:2] + '-' + digits[2:len(digits)]
             
-        elif str(index) == "ФН" and len(digits) == 4: 
+        elif str(index) == "ФН" and len(digits) == 4:
             digits = digits[0:2] + '-' + digits[2:len(digits)]
             
         else:
@@ -67,3 +75,14 @@ def formatter( parts ):
                 digits = digits[:2] + '-' + digits[2:5]
 
         return str(index + digits), surname
+
+def getFromDb( vkId ):
+    connection = MySQLdb.connect( MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, charset='utf8',use_unicode = True)
+    cursor = connection.cursor()
+    cursor.execute( "SELECT surname FROM user WHERE vk_id =" + str( vkId ) + ";" )
+    surname = cursor.fetchone()[0]
+    cursor.execute( "SELECT UID from user WHERE vk_id = " + str( vkId ) + ";" )
+    group = cursor.fetchone()[0]
+    cursor.close()
+    connection.close()
+    return group, surname

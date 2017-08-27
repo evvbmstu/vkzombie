@@ -16,8 +16,9 @@ def processing():
                 api = vk.API( session )
                 user_id = newJson['object']['user_id']
                 text = newJson['object']['body'].encode("utf8")
-                answer = handlers.handler( text )
-                api.messages.send( access_token = token, 
+                answer = handlers.handler( text, user_id )
+		print( answer )
+		api.messages.send( access_token = token, 
 				   user_id = str(user_id), 
 			           message = answer )
                 return 'ok'
