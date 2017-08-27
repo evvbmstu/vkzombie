@@ -88,4 +88,4 @@ def checkIn ( vkId, surname, uid, name = None ):
     else:
 	cursor.close()
 	conn.close()
-	return result[0]
+	return " Вы уже зарегистрированы "
