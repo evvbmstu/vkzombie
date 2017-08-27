@@ -3,32 +3,31 @@
 from tabulate import tabulate
 
 def resultsView( exams, credit, course ):
+    stab = "----------------------------------------------------------"
     examsInfo = exams.items()
     creditInfo = credit.items()
     courseInfo = course.items()
-    outList = []
+    
+    examStr = ''
+    for i in range( 0, len( exams ) ):
+        examStr += examsInfo[i][0].decode( "utf-8" )
 
-    for i in range(0, len(exams)):
-        tmpList = []
-        tmpList.append(examsInfo[i][0].decode("utf-8"))
-        tmpList.append(examsInfo[i][1].decode("utf-8"))
-        outList.append(tmpList)
-    examStr = "Экзамены \n" + tabulate(outList)
-
-    outList = []
-    for i in range(0, len(credit)):
-        tmpList = []
-        tmpList.append(creditInfo[i][0].decode("utf-8"))
-        tmpList.append(creditInfo[i][1].decode("utf-8"))
-        outList.append(tmpList)
-    creditStr = "\nЗачеты \n" + tabulate(outList)
-
-    outList = []
-    for i in range(0, len(course)):
-        tmpList = []
-        tmpList.append(courseInfo[i][0].decode("utf-8"))
-        tmpList.append(courseInfo[i][1].decode("utf-8"))
-        outList.append(tmpList)
-    courseStr = "\nКурсовые \n" + tabulate(outList)
-    sumStr = examStr + creditStr + courseStr
-    return sumStr
+        examStr += " (" + examsInfo[i][1].decode( "utf-8" ) + ")"
+        examStr += "\n"
+    examStr = "Экзамены:\n" + examStr
+    
+    creditStr = ''
+    for i in range( 0, len( credit ) ):
+        creditStr += creditInfo[i][0].decode(" utf-8" )
+        creditStr += " (" + creditInfo[i][1].decode( "utf-8" ) + ")"
+        creditStr += "\n"
+    creditStr = stab + "\nЗачеты:\n" + creditStr
+    
+    courseStr = ''
+    for i in range( 0, len( course ) ):
+        courseStr += courseInfo[i][0].decode("utf-8").replace( "Курсовая работа", '' )
+        courseStr += " (" + courseInfo[i][1].decode( "utf-8" ) + ")"
+        courseStr += "\n"
+    courseStr = stab + "\nКурсовые работы:\n" + courseStr
+    
+    return examStr + creditStr + courseStr
