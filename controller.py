@@ -2,8 +2,9 @@
 
 import requests
 import re
+import MySQLdb
 from bs4 import BeautifulSoup as bs
-from settings import login,password
+from settings import *
 from views import resultsView
 # Return results of the last exams.
 def getResults( groups, surname ):
@@ -66,9 +67,25 @@ def getResults( groups, surname ):
         return  " Не удалось найти такую группу. "
     elif not surnameFound:
         return  " Не смог найти такого студента, проверь фамилию. "
-    #results = []
-    #results.append( exams )
-    #results.append( credit )
-    #results.append( course )
     
     return resultsView( exams, credit, course )
+
+def checkIn ( vkId, surname, uid, name = None ):
+    # Create connection to MySQL db
+    conn = MySQLdb.connect( MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, charset = 'utf8', use_unicode = True )
+    cursor = conn.cursor()
+    # Arguments for stored procedure createUser()
+    args = [ vkId, surname, name, uid ]
+    # Call procedure
+    cursor.callproc( "createUser", args )
+    # Retrieve call result
+    result = cursor.fetchone()
+    if result is None:
+    	conn.commit()
+	cursor.close()
+    	conn.close()
+	return " Студент успешно зарегистрирован "
+    else:
+	cursor.close()
+	conn.close()
+	return " Вы уже зарегистрированы "
