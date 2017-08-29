@@ -5,6 +5,7 @@ from controller import getResults,checkIn
 from settings import *
 import sys
 import MySQLdb
+import nltk
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -18,7 +19,7 @@ def handler( string, vkId ):
             group, surname = formatter( parts )
 	    results = getResults( group, surname )
 	    return results
-	elif command in commands['registration']:
+	elif command in commands['registration']: 
 	    group, surname = formatter( parts )
 	    results =  checkIn ( vkId, surname, group )
 	    return results
@@ -29,6 +30,8 @@ def handler( string, vkId ):
 	    group, surname = getFromDb( vkId )
 	    results = getResults( group, surname )
 	    return results
+	elif unicode( string, 'utf-8' ).upper() in commands['commandsInfo']:
+	    return commandsInfoList
 
 # Format input text ( group, name )
 def formatter( parts ):
