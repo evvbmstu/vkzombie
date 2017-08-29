@@ -32,7 +32,7 @@ def handler( string, vkId ):
 	    return results
 	elif unicode( string, 'utf-8' ).upper() in commands['commandsInfo']:
 	    return commandsInfoList
-	elif:
+	else:
 	    return " Неверная команда "
 
 # Format input text ( group, name )
