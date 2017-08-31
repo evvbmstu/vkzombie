@@ -15,25 +15,56 @@ def handler( string, vkId ):
         parts = string.split( " " )
         command = unicode( parts[0], 'utf-8' ).upper()
         
-	if command in commands['session']:
+        if command in commands['session']:
             group, surname = formatter( parts )
-	    results = getResults( group, surname )
-	    return results
-	elif command in commands['registration']: 
-	    group, surname = formatter( parts )
-	    results =  checkIn ( vkId, surname, group )
-	    return results
+            results = getResults( group, surname )
+            return results
+        elif command in commands['registration']: 
+            group, surname = formatter( parts )
+            results =  checkIn ( vkId, surname, group )
+            return results
+        elif command in commands['lesson']: 
+            group, surname = formatter( parts )
+            command2 = unicode( parts[1], 'utf-8' ).upper()
+            if command2 in commands['Next']: 
+                results = timeSchedule(group, 'next')
+                return results
+        elif command in commands['lesson']: 
+            group, surname = formatter( parts )
+            command2 = unicode( parts[1], 'utf-8' ).upper()
+            if command2 in commands['Now']: 
+                results = timeSchedule(group, 'now')
+                return results
+        elif command in commands['week_schedule']: 
+            group, surname = formatter( parts )
+            command2 = unicode( parts[1], 'utf-8' ).upper()
+            if command2 in commands['Week']: 
+                results = weekSchedule(group)
+                return results
         else:
             return "Команда не найдена "
+        
     else:
         if unicode( string, 'utf-8' ).upper()  in commands['session']:
-	    group, surname = getFromDb( vkId )
-	    results = getResults( group, surname )
-	    return results
-	elif unicode( string, 'utf-8' ).upper() in commands['commandsInfo']:
-	    return commandsInfoList
-	else:
-	    return " Неверная команда "
+            group, surname = getFromDb( vkId )
+            results = getResults( group, surname )
+            return results
+        elif unicode( string, 'utf-8' ).upper() in commands['commandsInfo']:
+            return commandsInfoList
+        elif unicode( string, 'utf-8' ).upper()  in commands['next_lesson']:
+            group, surname = getFromDb( vkId )
+            results = timeSchedule(group, 'next')
+            return results
+        elif unicode( string, 'utf-8' ).upper()  in commands['now_lesson']:
+            group, surname = getFromDb( vkId )
+            results = timeSchedule(group, 'now')
+            return results
+        elif unicode( string, 'utf-8' ).upper()  in commands['week_schedule']:
+            group, surname = getFromDb( vkId )
+            results = weekSchedule(group)
+            return results
+        else:
+            return " Неверная команда "
 
 # Format input text ( group, name )
 def formatter( parts ):
