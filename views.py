@@ -30,4 +30,5 @@ def resultsView( exams, credit, course ):
         courseStr += "\n"
     courseStr = stab + "\nКурсовые работы:\n" + courseStr
     
+    print examStr + creditStr + courseStr
     return examStr + creditStr + courseStr

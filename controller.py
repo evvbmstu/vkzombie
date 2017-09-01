@@ -6,7 +6,12 @@ import MySQLdb
 from bs4 import BeautifulSoup as bs
 from settings import *
 from views import resultsView
-import schedule
+from datetime import time, date, datetime, timedelta
+from schedule import site, findSchedule, takingData, takingStyles, rowFinding, whatLesson, checkStyles
+
+
+url = 'http://www.bmstu.ru/mstu/undergraduate/schedule/table-view/'
+
 # Return results of the last exams.
 def getResults( groups, surname ):
     # List that we return after web parsing.
@@ -39,7 +44,7 @@ def getResults( groups, surname ):
 
     #Start to crawl.
     examData = session.get( examUrl, cookies = loginPost.cookies, headers = headers )
-    bsObj = bs( examData.text, "html" )
+    bsObj = bs( examData.text, "lxml" )
     tryList = []
     groupsList = bsObj.findAll("a",{"name":"sdlk"})
     groupsFound = False
@@ -92,9 +97,10 @@ def checkIn ( vkId, surname, uid, name = None ):
 	return " Вы уже зарегистрированы "
 
 #ищем пару, которая идет в данный момент времени
-def timeShedule(mes, period):   
+def timeSchedule(mes, period):
     schedule_url = findSchedule(site(url), mes)
     if schedule_url == 'nothing':
+        print 'Расписания нет'
         return 'Расписания нет'
     #понделеьник первой недели первого семестра
     d = date(2017, 9, 1) #1 september
@@ -104,12 +110,12 @@ def timeShedule(mes, period):
     #необходимые данные по входной дате
     d2 = date(2017, 10, 18)    
     week_counter = ((d2 - d).days / 7) % 2 #find is current week 'чс' == 0 or 'зн' == 1
-    t = time(14, 10)
+    t = time(13, 10)
     dt = datetime.combine(d2, t)
     weekday = dt.isoweekday()
     
     #парсим расписание
-    soup = BeautifulSoup(site(schedule_url), 'lxml')
+    soup = bs(site(schedule_url), 'lxml')
     text = soup.get_text()
     lines = takingData(text)
     lines[0] = lines[0][1:-1]
@@ -122,15 +128,15 @@ def timeShedule(mes, period):
             break
         else:
             col+=1
-
     #теперь еще и стили оказывается надо найти
     styles = takingStyles(text)
 
     #наконец-то начинаем поиск нужной пары
     cur_row = rowFinding(weekday, week_counter, t)
     if period == 'next' and cur_row != -1:
-        cur_row += 2
-    return whatLesson(lines, cur_row, col, styles)
+        cur_row += 2    
+    print whatLesson(lines, cur_row, col, styles)
+    #return whatLesson(lines, cur_row, col, styles)
 
 def weekSchedule(mes): 
     schedule_url = findSchedule(site(url), mes)  
@@ -140,9 +146,10 @@ def weekSchedule(mes):
     def_weekday = d.isoweekday() - 1  #what is it weekday?
     d = d - timedelta(days = def_weekday) 
     d2 = date(2017, 10, 1)
-    weeknumber = ((d2 - d).days / 7) + 1 #'чс' == 1 or 'зн' == 0 
-    week_counter = weeknumber % 2
-    soup = BeautifulSoup(site(schedule_url), 'lxml')
+    weeknumber = ((d2 - d).days / 7) + 1  
+    week_counter = weeknumber % 2 #'чс' == 1 or 'зн' == 0
+    print week_counter
+    soup = bs(site(schedule_url), 'lxml')
     text = soup.get_text()
     lines = takingData(text)
     lines[0] = lines[0][1:-1]
@@ -183,7 +190,7 @@ def weekSchedule(mes):
             else:
                 getting_line[1] = tmp_row
 
-            if week_counter == 1:
+            if week_counter == 0:
                 if row % 2 == 1:
                     schedule_row.append(getting_line[1] + "   " + getting_line[col])
             else:
@@ -192,6 +199,7 @@ def weekSchedule(mes):
                 
             if (row - 1) % 14 == 0:
                 schedule_row.append('---------------------------------------------------')
-                #schedule_row.append('---------------------------------------------------') 
-  
+    for each in schedule_row:
+        print each
     return schedule_row
+

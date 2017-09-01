@@ -5,7 +5,7 @@
 
 import requests
 from bs4 import BeautifulSoup
-from datetime import time, date, datetime, timedelta
+from datetime import time
 #from selenium import webdriver
 # -*- coding: utf-8 -*- 
 
@@ -17,7 +17,9 @@ def site(url):
     
 def checkCourse(mes):
     if mes.find(u'М') != -1 or mes.find(u'Б') != -1 :
-        mes = mes[:-1]
+        #mes = mes[:-1]
+        mes = mes.replace(u'М', u'')
+        mes = mes.replace(u'Б', u'')
     mas = mes.split('-')
     
     if int(mas[1]) < 30:
