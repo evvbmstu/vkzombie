@@ -108,9 +108,11 @@ def timeSchedule(mes, period):
     d = d - timedelta(days=def_weekday) #find monday of the first week
     
     #необходимые данные по входной дате
-    d2 = date(2017, 10, 18)    
+    #d2 = date(2017, 10, 18)  
+    d2 = datetime.now().date()
     week_counter = ((d2 - d).days / 7) % 2 #find is current week 'чс' == 0 or 'зн' == 1
-    t = time(13, 10)
+    #t = time(13, 10)
+    t = datetime.now().time()
     dt = datetime.combine(d2, t)
     weekday = dt.isoweekday()
     
@@ -145,7 +147,8 @@ def weekSchedule(mes):
     d = date(2017, 9, 1) #1 september
     def_weekday = d.isoweekday() - 1  #what is it weekday?
     d = d - timedelta(days = def_weekday) 
-    d2 = date(2017, 10, 1)
+    #d2 = date(2017, 10, 1)
+    d2 = datetime.now().date()
     weeknumber = ((d2 - d).days / 7) + 1  
     week_counter = weeknumber % 2 #'чс' == 1 or 'зн' == 0
     print week_counter
