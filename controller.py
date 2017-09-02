@@ -5,7 +5,7 @@ import re
 import MySQLdb
 from bs4 import BeautifulSoup as bs
 from settings import *
-from views import resultsView
+from views import resultsView, schedulePrint
 from datetime import time, date, datetime, timedelta
 from schedule import site, findSchedule, takingData, takingStyles, rowFinding, whatLesson, checkStyles
 
@@ -151,7 +151,6 @@ def weekSchedule(mes):
     d2 = datetime.now().date()
     weeknumber = ((d2 - d).days / 7) + 1  
     week_counter = weeknumber % 2 #'чс' == 1 or 'зн' == 0
-    print week_counter
     soup = bs(site(schedule_url), 'lxml')
     text = soup.get_text()
     lines = takingData(text)
@@ -202,7 +201,40 @@ def weekSchedule(mes):
                 
             if (row - 1) % 14 == 0:
                 schedule_row.append('---------------------------------------------------')
-    for each in schedule_row:
-        print each
     return schedule_row
+
+def daySchedule(mes):
+    weekday = datetime.now().date().isoweekday()
+    #weekday = 7
+    if weekday == 7:
+        print "Сегодня выходной, отдыхай)"
+        print "Вот тебе пары на завтра:"
+        print ''
+        return tomorrowSchedule(mes)
+    else:
+        lessons_list = weekSchedule(mes)
+        first_el = (weekday - 1) * 8 + 2
+        last_el = first_el + 7
+        day_lessons = lessons_list[first_el : last_el]
+        schedulePrint(day_lessons)
+        return day_lessons
+
+def tomorrowSchedule(mes):
+    cur_weekday = datetime.now().date().isoweekday()
+    #cur_weekday = 7
+    if cur_weekday == 7:
+        weekday = 1
+    else:
+        weekday = cur_weekday + 1
+    #weekday = 7
+    if weekday == 7:
+        print "Завтра выходной, отдыхай)"
+        return "Завтра выходной, отдыхай)"
+    else:
+        lessons_list = weekSchedule(mes)
+        first_el = (weekday - 1) * 8 + 2
+        last_el = first_el + 7
+        day_lessons = lessons_list[first_el : last_el]
+        schedulePrint(day_lessons)
+        return day_lessons
 

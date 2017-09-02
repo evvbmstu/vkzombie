@@ -6,7 +6,7 @@ import sys
 import json
 import handlers
 
- app = Flask(__name__)
+app = Flask(__name__)
 @app.route("/poll", methods = ['POST'])
 def processing():
     newJson = request.get_json()
@@ -29,6 +29,6 @@ if __name__ == "__main__":
 
 """
 if __name__ == "__main__":
-    text = "сессия ИУ361 Ступак"
+    text = "расписание неделя ИУ371 Ступак бакалавр"
     answer = handlers.handler( text, 14235234 ) 
 """

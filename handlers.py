@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import re
-from controller import getResults,checkIn, timeSchedule, weekSchedule
+from controller import getResults,checkIn, timeSchedule, weekSchedule, daySchedule, tomorrowSchedule
 from settings import *
+from views import schedulePrint
 import sys
 import MySQLdb
 import nltk
@@ -37,6 +38,13 @@ def handler( string, vkId ):
             command2 = unicode( parts[1], 'utf-8' ).upper()
             if command2 in commands['Week']: 
                 results = weekSchedule(group)
+                schedulePrint(results)
+                return results
+            elif command2 in commands['Today']: 
+                results = daySchedule(group)
+                return results
+            elif command2 in commands['Tomorrow']: 
+                results = tomorrowSchedule(group)
                 return results
         else:
             return "Команда не найдена "
@@ -63,6 +71,13 @@ def handler( string, vkId ):
             command2 = unicode( parts[1], 'utf-8' ).upper()
             if command2 in commands['Week']: 
                 results = weekSchedule(group)
+                schedulePrint(results)
+                return results
+            elif command2 in commands['Today']: 
+                results = daySchedule(group)
+                return results
+            elif command2 in commands['Tomorrow']: 
+                results = tomorrowSchedule(group)
                 return results
         else:
             return " Неверная команда "
