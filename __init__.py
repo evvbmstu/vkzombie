@@ -26,3 +26,9 @@ def processing():
                 return '9f3fba60'
 if __name__ == "__main__":
     app.run()
+
+"""
+if __name__ == "__main__":
+    text = "расписание неделя ИУ371 Ступак бакалавр"
+    answer = handlers.handler( text, 14235234 ) 
+"""
