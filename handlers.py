@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from controller import getResults,checkIn, timeSchedule, weekSchedule, daySchedule, tomorrowSchedule
+from controller import *
 from settings import *
 from views import schedulePrint
 import sys
@@ -11,19 +11,21 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 #Handling all messages.
-#string example: "пара сегодня ИУ10-11 Петров бакалавр"
 def handler( string, vkId ):
     if " " in string:
         parts = string.split( " " )
         command = unicode( parts[0], 'utf-8' ).upper()
+        # Get exam's result's.
         if command in commands['session']:
             group, surname = formatter( parts[1:] )
             results = getResults( group, surname )
             return results
+        # Add new user to MySQLdb.
         elif command in commands['registration']: 
             group, surname = formatter( parts[1:] )
             results =  checkIn ( vkId, surname, group )
             return results
+        # Get lesson info.
         elif command in commands['lesson']: 
             group, surname = formatter( parts[2:] )
             command2 = unicode( parts[1], 'utf-8' ).upper()
@@ -33,6 +35,7 @@ def handler( string, vkId ):
             else:
                 results = timeSchedule(group, 'now')
                 return results
+        # Get shedule info.   
         elif command in commands['schedule']: 
             group, surname = formatter( parts[2:] )
             command2 = unicode( parts[1], 'utf-8' ).upper()
@@ -56,7 +59,7 @@ def handler( string, vkId ):
             return results
         elif unicode( string, 'utf-8' ).upper() in commands['commandsInfo']:
             return commandsInfoList
-        elif unicode( parts[0], 'utf-8' ).upper()  in commands['lesson']:
+        elif unicode( parts[0], 'utf-8' ).upper() in commands['lesson']:
             group, surname = getFromDb( vkId )
             command2 = unicode( parts[1], 'utf-8' ).upper()
             if command2 in commands['Now']: 
