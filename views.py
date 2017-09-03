@@ -30,9 +30,4 @@ def resultsView( exams, credit, course ):
         courseStr += "\n"
     courseStr = stab + "\nКурсовые работы:\n" + courseStr
     
-    print examStr + creditStr + courseStr
     return examStr + creditStr + courseStr
-
-def schedulePrint(list):
-    for each in list:
-        print each
