@@ -1,12 +1,6 @@
-
-# coding: utf-8
-
-# In[11]:
-
 import requests
 from bs4 import BeautifulSoup
 from datetime import time
-#from selenium import webdriver
 # -*- coding: utf-8 -*- 
 
 url = 'http://www.bmstu.ru/mstu/undergraduate/schedule/table-view/'
@@ -17,7 +11,6 @@ def site(url):
     
 def checkCourse(mes):
     if mes.find(u'М') != -1 or mes.find(u'Б') != -1 :
-        #mes = mes[:-1]
         mes = mes.replace(u'М', u'')
         mes = mes.replace(u'Б', u'')
     mas = mes.split('-')
@@ -163,10 +156,3 @@ def checkStyles(cur_row, cur_col, styles):
                                 cell = [row, int(col)]
                                 return cell 
     return [-1]
-
-
-
-# In[ ]:
-
-
-
