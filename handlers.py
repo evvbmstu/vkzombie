@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import re
-from controller import getResults,checkIn
+from controller import *
 from settings import *
 import sys
 import MySQLdb
-import nltk
+import schedule
+from views import dayView
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -14,15 +15,41 @@ def handler( string, vkId ):
     if " " in string:
         parts = string.split( " " )
         command = unicode( parts[0], 'utf-8' ).upper()
-        
+	
+	# Exam's result's 
 	if command in commands['session']:
             group, surname = formatter( parts )
 	    results = getResults( group, surname )
 	    return results
+	# Registration block
 	elif command in commands['registration']: 
+	    if len( parts ) != 4:
+		return " Неправильно введена команда. Проверь ещё раз."
 	    group, surname = formatter( parts )
 	    results =  checkIn ( vkId, surname, group )
 	    return results
+	# Schdedule command's block.
+	elif command in commands['today']:
+            group, surname = formatter( parts )
+            return daySchedule( group )
+        elif command in commands['tomorrow']:
+             group, surname = formatter( parts )
+             return tomorrowSchedule( group )
+        elif command in commands['week']:
+             group, surname = formatter( parts )
+             return dayView( weekSchedule( group ) )
+	# Lesson command's block.
+	# Schedule command's block
+	#elif command in commands['schedule']:
+	#    if unicode( parts[1], 'utf-8' ).upper() in commands['today']:
+	#        group, surname = getFromDb( vkId )
+	#        return daySchedule( group )
+	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['tomorrow']:
+	#	group, surname = getFromDb( vkId )
+	#	return tomorrowSchedule( group )
+	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['week']:
+	#	group, surname = getFromDb( vkId )
+	#	return dayView( weekSchedule( group ))
         else:
             return "Команда не найдена "
     else:
@@ -32,13 +59,21 @@ def handler( string, vkId ):
 	    return results
 	elif unicode( string, 'utf-8' ).upper() in commands['commandsInfo']:
 	    return commandsInfoList
+	elif unicode( string, 'utf-8' ).upper() in commands['today']:
+	    group, surname = getFromDb( vkId )
+	    return daySchedule( group )
+	elif unicode( string, 'utf-8' ).upper() in commands['tomorrow']:
+             group, surname = getFromDb( vkId )
+             return tomorrowSchedule( group )
+        elif unicode( string, 'utf-8' ).upper() in commands['week']:
+             group, surname = getFromDb( vkId )
+             return dayView( weekSchedule( group ) )
 	else:
 	    return " Неверная команда "
 
 # Format input text ( group, name )
 def formatter( parts ):
         surname = unicode( parts[2], 'utf-8' ).lower().capitalize()
-            
         if '-' not in parts[1]:
             digits = re.search(r'\d+', parts[1]).group()
             index = unicode(re.search(r'\D+',parts[1]).group(),'utf-8').upper()
@@ -79,6 +114,11 @@ def formatter( parts ):
             elif len( digits ) == 5:
                 digits = digits[:2] + '-' + digits[2:5]
 
+	if unicode( parts[-1], 'utf-8' ).upper() == u'БАКАЛАВР':
+            digits += 'Б'
+        elif unicode( parts[-1], 'utf-8' ).upper() == u'МАГИСТР':
+            digits += 'М'
+
         return str(index + digits), surname
 
 def getFromDb( vkId ):
@@ -91,3 +131,4 @@ def getFromDb( vkId ):
     cursor.close()
     connection.close()
     return group, surname
+

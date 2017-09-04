@@ -31,3 +31,11 @@ def resultsView( exams, credit, course ):
     courseStr = stab + "\nКурсовые работы:\n" + courseStr
     
     return examStr + creditStr + courseStr
+
+def dayView( timetable ):
+    answer = ""
+    for row in timetable:
+        answer += row + "\n"
+    if len( answer ) == 14:
+	return " Не смогли найти расписание. Проверь группу и форму обучения ( бакалавр/специалист/магистр )."
+    return answer

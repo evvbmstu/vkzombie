@@ -5,7 +5,9 @@ import re
 import MySQLdb
 from bs4 import BeautifulSoup as bs
 from settings import *
-from views import resultsView
+from views import *
+from datetime import time, date, datetime, timedelta
+from schedule import *
 # Return results of the last exams.
 def getResults( groups, surname ):
     # List that we return after web parsing.
@@ -38,7 +40,7 @@ def getResults( groups, surname ):
 
     #Start to crawl.
     examData = session.get( examUrl, cookies = loginPost.cookies, headers = headers )
-    bsObj = bs( examData.text, "html" )
+    bsObj = bs( examData.text, "lxml" )
     tryList = []
     groupsList = bsObj.findAll("a",{"name":"sdlk"})
     groupsFound = False
@@ -89,3 +91,94 @@ def checkIn ( vkId, surname, uid, name = None ):
 	cursor.close()
 	conn.close()
 	return " Вы уже зарегистрированы "
+
+def daySchedule( group ):
+    weekday = datetime.now().date().isoweekday()
+    
+    if weekday == 7:
+        tmp = "Сегодня выходной, отдыхай )\n"
+        tmp1 = "Вот тебе пары на завтра:\n"
+        return tmp + tmp1 + tomorrowSchedule( group )
+    else:
+        lessons_list = weekSchedule( group )
+        first_el = (weekday - 1) * 8 + 2
+        last_el = first_el + 7
+        day_lessons = lessons_list[first_el : last_el]
+        return dayView( day_lessons )
+
+def tomorrowSchedule( group ):
+    cur_weekday = datetime.now().date().isoweekday()
+    if cur_weekday == 7:
+        weekday = 1
+    else:
+        weekday = cur_weekday + 1
+    if weekday == 7:
+        return "Завтра выходной, отдыхай )"
+    else:
+        lessons_list = weekSchedule(group)
+        first_el = (weekday - 1) * 8 + 2
+        last_el = first_el + 7
+        day_lessons = lessons_list[first_el : last_el]
+        return dayView ( day_lessons )
+
+def weekSchedule( group ): 
+    schedule_url = findSchedule(site(url), group)  
+    if schedule_url == 'nothing':
+        return 'Расписания нет' 
+    d = date(2017, 9, 1) #1 september
+    def_weekday = d.isoweekday() - 1  #what is it weekday?
+    d = d - timedelta(days = def_weekday) 
+    d2 = datetime.now().date()
+    weeknumber = ((d2 - d).days / 7) + 1
+    week_counter = weeknumber % 2 #'чс' == 1 or 'зн' == 0
+    soup = bs(site(schedule_url), 'lxml')
+    text = soup.get_text()
+    lines = takingData(text)
+    lines[0] = lines[0][1:-1]
+    groups = lines[0].split('","')
+    col = 0
+    row = 0
+    tmp_row=''
+    
+    for each in groups:
+        if each == group + ' ':
+            break
+        else:
+            col+=1
+    styles = takingStyles(text)
+    schedule_row = []
+    if week_counter == 1:
+        tmp_row = 'Числитель'
+    else :
+        tmp_row = 'Знаменатель'
+    schedule_row.append('Неделя №' + str(weeknumber) + '   ' + tmp_row)
+   
+    for each in lines:
+            each = each[1:-1]
+            row += 1   
+            getting_line = each.split('","')
+            if getting_line[col] == '':
+                cell = checkStyles(row - 1, col, styles)
+                if cell[0] == -1:
+                    getting_line[col] = '    ---'
+                else:
+                     tmp = lines[cell[0]].split('","')
+                     getting_line[col] = tmp[cell[1]]
+            elif getting_line[col].find('---') != -1 :
+                 getting_line[col] = '    ---'
+            
+            if getting_line[1] != '' : 
+                tmp_row = getting_line[1]
+            else:
+                getting_line[1] = tmp_row
+
+            if week_counter == 0:
+                if row % 2 == 1:
+                    schedule_row.append(getting_line[1] + "   " + getting_line[col])
+            else:
+                if row % 2 == 0:
+                    schedule_row.append(getting_line[1] + "   " + getting_line[col])
+                
+            if (row - 1) % 14 == 0:
+                schedule_row.append('---------------------------------------------------')
+    return schedule_row
