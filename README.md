@@ -18,7 +18,7 @@ Resurrected with the help of new technologies, Nikolai Ernestovich Bauman is cal
 
 # Commands:
 ### Регистрация:  
-**Шаблоны**:
+**Шаблоны**:  
 регистрация <группа> <фамилия> <форма обучения>
 **Примеры**:  
 регистрация иу371 елфимов бакалавр
