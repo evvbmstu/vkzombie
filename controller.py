@@ -101,7 +101,7 @@ def daySchedule( group ):
         return tmp + tmp1 + tomorrowSchedule( group )
     else:
         lessons_list = weekSchedule( group )
-        first_el = (weekday - 1) * 8 + 2
+        first_el = (weekday - 1) * 8 + 3
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
         return dayView( day_lessons )
@@ -116,7 +116,7 @@ def tomorrowSchedule( group ):
         return "Завтра выходной, отдыхай )"
     else:
         lessons_list = weekSchedule(group)
-        first_el = (weekday - 1) * 8 + 2
+        first_el = (weekday - 1) * 8 + 3
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
         return dayView ( day_lessons )
