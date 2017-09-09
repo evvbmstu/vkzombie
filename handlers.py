@@ -17,40 +17,51 @@ def handler( string, vkId ):
         parts = string.split( " " )
         command = parts[0]
 	
-	# Exam's result's 
-	if check( command, commands['session'] ):
+    	# Exam's result's 
+        if check( command, commands['session'] ):
             group, surname = formatter( parts )
-	    results = getResults( group, surname )
-	    return results
-	# Registration block
-	elif check( command, commands['registration'] ): 
-	    if len( parts ) != 4:
-		return " Неправильно введена команда. Проверь ещё раз."
-	    group, surname = formatter( parts )
-	    results =  checkIn ( vkId, surname, group )
-	    return results
-	# Schdedule command's block.
-	elif check( command, commands['today'] ):
+            results = getResults( group, surname )
+            return results
+    	# Registration block
+        elif check( command, commands['registration'] ): 
+            if len( parts ) != 4:
+                return " Неправильно введена команда. Проверь ещё раз."
             group, surname = formatter( parts )
+            results =  checkIn ( vkId, surname, group )
+            return results
+    	# Schdedule command's block.
+
+        elif check( command, commands['today'] ):
+            try:
+                group, surname = formatter( parts )
+            except ValueError:
+                return formatter( parts )
             return daySchedule( group )
         elif check( command, commands['tomorrow'] ):
-             group, surname = formatter( parts )
-             return tomorrowSchedule( group )
+            try:
+                group, surname = formatter( parts )
+            except ValueError:
+                return formatter( parts )
+            return tomorrowSchedule( group )
         elif check( command, commands['week'] ):
-             group, surname = formatter( parts )
-             return dayView( weekSchedule( group ) )
-	# Lesson command's block.
-	# Schedule command's block
-	#elif command in commands['schedule']:
-	#    if unicode( parts[1], 'utf-8' ).upper() in commands['today']:
-	#        group, surname = getFromDb( vkId )
-	#        return daySchedule( group )
-	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['tomorrow']:
-	#group, surname = getFromDb( vkId )
-	#	return tomorrowSchedule( group )
-	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['week']:
-	#	group, surname = getFromDb( vkId )
-	#	return dayView( weekSchedule( group ))
+            try:
+                group, surname = formatter( parts )
+            except ValueError:
+                return formatter( parts )
+            return dayView( weekSchedule( group ) )
+
+    	# Lesson command's block.
+    	# Schedule command's block
+    	#elif command in commands['schedule']:
+    	#    if unicode( parts[1], 'utf-8' ).upper() in commands['today']:
+    	#        group, surname = getFromDb( vkId )
+    	#        return daySchedule( group )
+    	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['tomorrow']:
+    	#group, surname = getFromDb( vkId )
+    	#	return tomorrowSchedule( group )
+    	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['week']:
+    	#	group, surname = getFromDb( vkId )
+    	#	return dayView( weekSchedule( group ))
         else:
             return "Команда не найдена "
     else:
@@ -74,7 +85,10 @@ def handler( string, vkId ):
 
 # Format input text ( group, name )
 def formatter( parts ):
-        surname = unicode( parts[2], 'utf-8' ).lower().capitalize()
+        try:
+            surname = unicode( parts[2], 'utf-8' ).lower().capitalize()
+        except IndexError:
+                return "Команда введена не полностью, правильный вариант можно посмотреть по запросу <команды>"
         if '-' not in parts[1]:
             digits = re.search(r'\d+', parts[1]).group()
             index = unicode(re.search(r'\D+',parts[1]).group(),'utf-8').upper()

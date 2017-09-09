@@ -101,6 +101,8 @@ def daySchedule( group ):
         return tmp + tmp1 + tomorrowSchedule( group )
     else:
         lessons_list = weekSchedule( group )
+        if lessons_list == 'Расписания нет':
+            return " Не удалось найти такое расписание, проверь группу и форму обучения " 
         first_el = (weekday - 1) * 8 + 3
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
@@ -116,6 +118,8 @@ def tomorrowSchedule( group ):
         return "Завтра выходной, отдыхай )"
     else:
         lessons_list = weekSchedule(group)
+        if lessons_list == 'Расписания нет':
+            return " Не удалось найти такое расписание, проверь группу и форму обучения " 
         first_el = (weekday - 1) * 8 + 3
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
