@@ -90,7 +90,10 @@ def formatter( parts ):
         except IndexError:
                 return "Команда введена не полностью, правильный вариант можно посмотреть по запросу <команды>"
         if '-' not in parts[1]:
-            digits = re.search(r'\d+', parts[1]).group()
+            try:
+                digits = re.search(r'\d+', parts[1]).group()
+            except AttributeError:
+                return "Неправильно введена команда. Возможно ты перепутал местами <группу> и <форму обучения> в запросе. Попробуй еще раз!"
             index = unicode(re.search(r'\D+',parts[1]).group(),'utf-8').upper()
         else:
             group  = unicode( parts[1], "utf-8" ).upper()
