@@ -4,7 +4,7 @@ import re
 from controller import *
 from settings import *
 import sys
-#import MySQLdb
+import MySQLdb
 import schedule
 import nltk
 from views import dayView
