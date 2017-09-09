@@ -4,7 +4,7 @@ import re
 from controller import *
 from settings import *
 import sys
-#import MySQLdb
+import MySQLdb
 import schedule
 import nltk
 from views import dayView
@@ -49,19 +49,6 @@ def handler( string, vkId ):
             except ValueError:
                 return formatter( parts )
             return dayView( weekSchedule( group ) )
-
-    	# Lesson command's block.
-    	# Schedule command's block
-    	#elif command in commands['schedule']:
-    	#    if unicode( parts[1], 'utf-8' ).upper() in commands['today']:
-    	#        group, surname = getFromDb( vkId )
-    	#        return daySchedule( group )
-    	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['tomorrow']:
-    	#group, surname = getFromDb( vkId )
-    	#	return tomorrowSchedule( group )
-    	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['week']:
-    	#	group, surname = getFromDb( vkId )
-    	#	return dayView( weekSchedule( group ))
         else:
             return "Команда не найдена "
     else:
@@ -132,7 +119,7 @@ def formatter( parts ):
             elif len( digits ) == 5:
                 digits = digits[:2] + '-' + digits[2:5]
             else:
-                return "Команда введена не правильно, проверь написанное) "
+                return " Неправильно указана группа, стоит быть внимательнее ) "
 
 	if unicode( parts[-1], 'utf-8' ).upper() == u'БАКАЛАВР':
             digits += 'Б'
