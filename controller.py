@@ -101,8 +101,8 @@ def daySchedule( group ):
         return tmp + tmp1 + tomorrowSchedule( group )
     else:
         lessons_list = weekSchedule( group )
-        if lessons_list == 'Расписания нет':
-            return " Не удалось найти такое расписание, проверь группу и форму обучения " 
+        if lessons_list == " Не удалось найти такое расписание, проверь группу и форму обучения ":
+            return lessons_list
         first_el = (weekday - 1) * 8 + 3
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
@@ -118,8 +118,8 @@ def tomorrowSchedule( group ):
         return "Завтра выходной, отдыхай )"
     else:
         lessons_list = weekSchedule(group)
-        if lessons_list == 'Расписания нет':
-            return " Не удалось найти такое расписание, проверь группу и форму обучения " 
+        if lessons_list == " Не удалось найти такое расписание, проверь группу и форму обучения ":
+            return lessons_list 
         first_el = (weekday - 1) * 8 + 3
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
@@ -128,7 +128,7 @@ def tomorrowSchedule( group ):
 def weekSchedule( group ): 
     schedule_url = findSchedule(site(url), group)  
     if schedule_url == 'nothing':
-        return 'Расписания нет' 
+        return " Не удалось найти такое расписание, проверь группу и форму обучения " 
     d = date(2017, 9, 1) #1 september
     def_weekday = d.isoweekday() - 1  #what is it weekday?
     d = d - timedelta(days = def_weekday) 
