@@ -37,7 +37,7 @@ def checkCourse(mes):
 def findSchedule(response, mes):
     schedule_link = 'nothing'
     soup = bs(response, 'html.parser')
-    if mes.find(u'М') != -1:
+    if mes.find(u'М') == -1:
         course = checkCourse(mes)
     else:
         course = 7
