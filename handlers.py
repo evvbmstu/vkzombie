@@ -4,7 +4,7 @@ import re
 from controller import *
 from settings import *
 import sys
-import MySQLdb
+#import MySQLdb
 import schedule
 import nltk
 from views import dayView
@@ -128,6 +128,8 @@ def formatter( parts ):
                 digits = digits[:1] + '-' + digits[1:5]
             elif len( digits ) == 5:
                 digits = digits[:2] + '-' + digits[2:5]
+            else:
+                return "Команда введена не правильно, проверь написанное) "
 
 	if unicode( parts[-1], 'utf-8' ).upper() == u'БАКАЛАВР':
             digits += 'Б'

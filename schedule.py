@@ -41,8 +41,13 @@ def findSchedule(response, mes):
         course = checkCourse(mes)
     else:
         course = str(7)
+    if course == 0:
+        return 'nothing'
     parts = mes.split("-") #разделяем входное сообщение на номер кафедры и группу
-    table = soup.find('div', {'id': 'vt-list-' + course})
+    try:
+        table = soup.find('div', {'id': 'vt-list-' + course})
+    except AttributeError:
+        return 'nothing'
     table1 = table.find('div', {'class': 'col-md-12'})
     for row in table1.find_all('tr'):
         for col in row.find_all('td', {'class':'groupname'}):
