@@ -4,7 +4,7 @@ import re
 from controller import *
 from settings import *
 import sys
-import MySQLdb
+#import MySQLdb
 import schedule
 from views import dayView
 reload(sys)
@@ -30,14 +30,23 @@ def handler( string, vkId ):
 	    return results
 	# Schdedule command's block.
 	elif command in commands['today']:
-            group, surname = formatter( parts )
+            try:
+                group, surname = formatter( parts )
+            except ValueError:
+                return formatter( parts )
             return daySchedule( group )
         elif command in commands['tomorrow']:
-             group, surname = formatter( parts )
-             return tomorrowSchedule( group )
+            try:
+                group, surname = formatter( parts )
+            except ValueError:
+                return formatter( parts )              
+            return tomorrowSchedule( group )
         elif command in commands['week']:
-             group, surname = formatter( parts )
-             return dayView( weekSchedule( group ) )
+            try:
+                group, surname = formatter( parts )
+            except ValueError:
+                return formatter( parts )
+            return dayView( weekSchedule( group ) )
 	# Lesson command's block.
 	# Schedule command's block
 	#elif command in commands['schedule']:
@@ -73,7 +82,10 @@ def handler( string, vkId ):
 
 # Format input text ( group, name )
 def formatter( parts ):
-        surname = unicode( parts[2], 'utf-8' ).lower().capitalize()
+        try:
+            surname = unicode( parts[2], 'utf-8' ).lower().capitalize()
+        except IndexError:
+                return "Команда введена не полностью, правильный вариант можно посмотреть по запросу <команды>"
         if '-' not in parts[1]:
             digits = re.search(r'\d+', parts[1]).group()
             index = unicode(re.search(r'\D+',parts[1]).group(),'utf-8').upper()
