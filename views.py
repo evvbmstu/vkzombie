@@ -33,6 +33,8 @@ def resultsView( exams, credit, course ):
     return examStr + creditStr + courseStr
 
 def dayView( timetable ):
+    if timetable == "wrong message":
+        return " Не смогли найти расписание. Проверь группу и форму обучения ( бакалавр/специалист/магистр )."
     answer = ""
     for row in timetable:
         answer += row + "\n"
