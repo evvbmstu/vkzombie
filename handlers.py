@@ -90,6 +90,10 @@ def formatter( parts ):
             index = unicode(re.search(r'\D+',parts[1]).group(),'utf-8').upper()
         else:
             group  = unicode( parts[1], "utf-8" ).upper()
+            if unicode( parts[-1], 'utf-8' ).upper() == u'БАКАЛАВР':
+                group += 'Б'
+            elif unicode( parts[-1], 'utf-8' ).upper() == u'МАГИСТР':
+                group += 'М'
             return group, surname
             
             
