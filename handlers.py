@@ -19,14 +19,20 @@ def handler( string, vkId ):
 	
     	# Exam's result's 
         if check( command, commands['session'] ):
-            group, surname = formatter( parts )
+            try:
+                group, surname = formatter( parts )
+            except ValueError:
+                return formatter( parts )
             results = getResults( group, surname )
             return results
     	# Registration block
         elif check( command, commands['registration'] ): 
             if len( parts ) != 4:
                 return " Неправильно введена команда. Проверь ещё раз."
-            group, surname = formatter( parts )
+            try:
+                group, surname = formatter( parts )
+            except ValueError:
+                return formatter( parts )
             results =  checkIn ( vkId, surname, group )
             return results
     	# Schdedule command's block.
@@ -80,7 +86,7 @@ def formatter( parts ):
             try:
                 digits = re.search(r'\d+', parts[1]).group()
             except AttributeError:
-                return "Неправильно введена команда. Возможно ты перепутал местами <группу> и <форму обучения> в запросе. Попробуй еще раз!"
+                return "Неправильно введена команда. Возможно, ты перепутал фамилию/форму обучения и группу местами. Попробуй еще раз!"
             index = unicode(re.search(r'\D+',parts[1]).group(),'utf-8').upper()
         else:
             group  = unicode( parts[1], "utf-8" ).upper()
