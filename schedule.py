@@ -46,9 +46,9 @@ def findSchedule(response, mes):
     parts = mes.split("-") #разделяем входное сообщение на номер кафедры и группу
     try:
         table = soup.find('div', {'id': 'vt-list-' + course})
+	table1 = table.find('div', {'class': 'col-md-12'})
     except AttributeError:
         return 'nothing'
-    table1 = table.find('div', {'class': 'col-md-12'})
     for row in table1.find_all('tr'):
         for col in row.find_all('td', {'class':'groupname'}):
             mega_line = col.get_text() #все группы из найденного тега
