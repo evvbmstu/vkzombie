@@ -11,8 +11,7 @@ def site(url):
     return response
     
 def checkCourse(mes):
-    if mes.find(u'М') != -1 or mes.find(u'Б') != -1 :
-        mes = mes.replace(u'М', u'')
+    if mes.find(u'Б') != -1 :
         mes = mes.replace(u'Б', u'')
     mas = mes.split('-')
    
@@ -38,7 +37,10 @@ def checkCourse(mes):
 def findSchedule(response, mes):
     schedule_link = 'nothing'
     soup = bs(response, 'html.parser')
-    course = checkCourse(mes)
+    if mes.find(u'М') != -1:
+        course = checkCourse(mes)
+    else:
+        course = 7
     parts = mes.split("-") #разделяем входное сообщение на номер кафедры и группу
     table = soup.find('div', {'id': 'vt-list-' + course})
     table1 = table.find('div', {'class': 'col-md-12'})
