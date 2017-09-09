@@ -40,7 +40,7 @@ def findSchedule(response, mes):
     if mes.find(u'М') == -1:
         course = checkCourse(mes)
     else:
-        course = 7
+        course = str(7)
     parts = mes.split("-") #разделяем входное сообщение на номер кафедры и группу
     table = soup.find('div', {'id': 'vt-list-' + course})
     table1 = table.find('div', {'class': 'col-md-12'})

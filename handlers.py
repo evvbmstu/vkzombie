@@ -6,6 +6,7 @@ from settings import *
 import sys
 import MySQLdb
 import schedule
+import nltk
 from views import dayView
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -14,28 +15,28 @@ sys.setdefaultencoding("utf-8")
 def handler( string, vkId ):
     if " " in string:
         parts = string.split( " " )
-        command = unicode( parts[0], 'utf-8' ).upper()
+        command = parts[0]
 	
 	# Exam's result's 
-	if command in commands['session']:
+	if check( command, commands['session'] ):
             group, surname = formatter( parts )
 	    results = getResults( group, surname )
 	    return results
 	# Registration block
-	elif command in commands['registration']: 
+	elif check( command, commands['registration'] ): 
 	    if len( parts ) != 4:
 		return " Неправильно введена команда. Проверь ещё раз."
 	    group, surname = formatter( parts )
 	    results =  checkIn ( vkId, surname, group )
 	    return results
 	# Schdedule command's block.
-	elif command in commands['today']:
+	elif check( command, commands['today'] ):
             group, surname = formatter( parts )
             return daySchedule( group )
-        elif command in commands['tomorrow']:
+        elif check( command, commands['tomorrow'] ):
              group, surname = formatter( parts )
              return tomorrowSchedule( group )
-        elif command in commands['week']:
+        elif check( command, commands['week'] ):
              group, surname = formatter( parts )
              return dayView( weekSchedule( group ) )
 	# Lesson command's block.
@@ -45,7 +46,7 @@ def handler( string, vkId ):
 	#        group, surname = getFromDb( vkId )
 	#        return daySchedule( group )
 	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['tomorrow']:
-	#	group, surname = getFromDb( vkId )
+	#group, surname = getFromDb( vkId )
 	#	return tomorrowSchedule( group )
 	#    elif unicode( parts[1], 'utf-8' ).upper() in commands['week']:
 	#	group, surname = getFromDb( vkId )
@@ -53,23 +54,23 @@ def handler( string, vkId ):
         else:
             return "Команда не найдена "
     else:
-        if unicode( string, 'utf-8' ).upper()  in commands['session']:
+        if check( string, commands['session'] ):
 	    group, surname = getFromDb( vkId )
 	    results = getResults( group, surname )
 	    return results
-	elif unicode( string, 'utf-8' ).upper() in commands['commandsInfo']:
+	elif check( string, commands['commandsInfo'] ):
 	    return commandsInfoList
-	elif unicode( string, 'utf-8' ).upper() in commands['today']:
+	elif check( string, commands['today'] ):
 	    group, surname = getFromDb( vkId )
 	    return daySchedule( group )
-	elif unicode( string, 'utf-8' ).upper() in commands['tomorrow']:
+	elif check( string, commands['tomorrow'] ):
              group, surname = getFromDb( vkId )
              return tomorrowSchedule( group )
-        elif unicode( string, 'utf-8' ).upper() in commands['week']:
+        elif check( string, commands['week'] ):
              group, surname = getFromDb( vkId )
              return dayView( weekSchedule( group ) )
 	else:
-	    return " Неверная команда "
+	    return " Неверная команда " 
 
 # Format input text ( group, name )
 def formatter( parts ):
@@ -131,4 +132,15 @@ def getFromDb( vkId ):
     cursor.close()
     connection.close()
     return group, surname
+
+def check ( string, commands ):
+	string = unicode( string, "utf-8" ).upper()
+	if string in commands:
+	    return True
+	else:
+	    dist = nltk.edit_distance( string, commands[0] )
+	    if dist <= 2:
+	        return True
+	    else:
+	        return False
 
