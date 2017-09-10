@@ -134,7 +134,13 @@ def weekSchedule( group ):
     def_weekday = d.isoweekday() - 1  #what is it weekday?
     d = d - timedelta(days = def_weekday) 
     d2 = datetime.now().date()
-    weeknumber = ((d2 - d).days / 7) + 1
+    #HF1
+    cur_weekday = datetime.now().date().isoweekday()
+    if cur_weekday != 7:
+        weeknumber = ((d2 - d).days / 7) + 1
+    else:
+        weeknumber = ((d2 - d).days / 7) + 2
+    #HF1
     week_counter = weeknumber % 2 #'чс' == 1 or 'зн' == 0
     soup = bs(site(schedule_url), 'lxml')
     text = soup.get_text()
