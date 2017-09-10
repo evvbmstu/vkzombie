@@ -54,25 +54,45 @@ def handler( string, vkId ):
                 group, surname = formatter( parts )
             except ValueError:
                 return formatter( parts )
-            return dayView( weekSchedule( group ) )
+	    cur_weekday = datetime.now().date().isoweekday()
+            if cur_weekday != 7:
+                return dayView( weekSchedule( group ) )
+            else:
+                return " Сегодня выходной, вот расписание на следующую неделю:\n" + dayView( weekSchedule( group ) )
         else:
             return "Команда не найдена "
     else:
         if check( string, commands['session'] ):
-	    group, surname = getFromDb( vkId )
+	    try:
+	        group, surname = getFromDb( vkId )
+	    except TypeError:
+		return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
 	    results = getResults( group, surname )
 	    return results
 	elif check( string, commands['commandsInfo'] ):
 	    return commandsInfoList
 	elif check( string, commands['today'] ):
-	    group, surname = getFromDb( vkId )
+	    try:
+                group, surname = getFromDb( vkId )
+            except TypeError:
+                return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
 	    return daySchedule( group )
 	elif check( string, commands['tomorrow'] ):
-             group, surname = getFromDb( vkId )
-             return tomorrowSchedule( group )
+	    try:
+                group, surname = getFromDb( vkId )
+            except TypeError:
+                return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
+            return tomorrowSchedule( group )
         elif check( string, commands['week'] ):
-             group, surname = getFromDb( vkId )
-             return dayView( weekSchedule( group ) )
+	    try:
+                group, surname = getFromDb( vkId )
+            except TypeError:
+                return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
+	    cur_weekday = datetime.now().date().isoweekday()
+            if cur_weekday != 7:
+                return dayView( weekSchedule( group ) )
+            else:
+                return " Сегодня выходной, вот расписание на следующую неделю:\n" + dayView( weekSchedule( group ) )
 	else:
 	    return " Неверная команда " 
 
