@@ -2,7 +2,7 @@
 
 import requests
 import re
-import MySQLdb
+#import MySQLdb
 from bs4 import BeautifulSoup as bs
 from settings import *
 from views import *
