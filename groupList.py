@@ -7,7 +7,7 @@
 import requests
 from bs4 import BeautifulSoup as bs
 from datetime import time
-from schedule import takingData
+from schedule import takingData, takingStyles, checkStyles
 
 url = 'http://www.bmstu.ru/mstu/undergraduate/schedule/table-view/'
 
@@ -21,7 +21,7 @@ def dataList():
     result_list = dict()
     i = 1
     links = []
-    while i < 2:
+    while i < 8:
         try:
             table = soup.find('div', {'id': 'vt-list-' + str(i)})
             i += 1
@@ -31,92 +31,63 @@ def dataList():
     
         for row in table1.find_all('tr'): 
             for col in row.find_all('td', {'class':'groupname'}):
-                schedule_link = url + row.find('a',{'class':'j-bold'}).get('href')
-                links.append(schedule_link)
-#     for each in links:
-#                     print each             
+                schedule_link = row.find('a',{'class':'j-bold'}).get('href')
+                links.append(schedule_link)         
                 groupsFind(schedule_link, result_list)
-    for each in result_list:
-        print each + "  " + result_list[each]
+#     for each in result_list:
+#         print each + "  " + result_list[each]
             
 
 def groupsFind(schedule_link, result_list):
-    soup = bs(site(schedule_link), 'lxml')
+    soup = bs(site(url+schedule_link), 'lxml')
     text = soup.get_text()
     lines = takingData(text)
+    
     lines[0] = lines[0][1:-1]
     groups = lines[0].split('","')
     counter = 3
     while (counter < len(groups)):
-        result_list[groups[counter]] =  schedule_link   
-        counter += 1
-            
-            
-            
-            
-#             for col in row.find_all('td', {'class':'groupname'}):
-#                 mega_line = col.get_text() #все группы из найденного тега
-# #                 print mega_line
-# #                 print " "
-#                 schedule_link = url + row.find('a',{'class':'j-bold'}).get('href')
-#                 line = mega_line.split('; ') #разбили на отдельные кафедры
-#                 scheduleFind(line, schedule_link, result_list)  
-#     for each in result_list:
-#         print each + "  " + result_list[each]
-         
-        
-        
-# def scheduleFind(line, schedule_link, result_list):
-#     for each in line:
-# #         print each
-# #         print " "
-#         small_line = each.split('-') #список, в котором по очереди хранятся номера кафедр и группы
-  
-#         if len(small_line) == 2:
-#             if small_line[0].find(",") == -1:
-#                 if small_line[1].find(",") == -1:
-#                     result_list[small_line[0] + "-" + small_line[1]] =  schedule_link
-#                 else:
-#                     groups = small_line[1].split(",")
-#                     for each in groups:
-#                         result_list[small_line[0] + "-" + each] =  schedule_link
-#             else:
-#                 faculties = small_line[0].split(",")
-#                 for each in faculties:
-#                     if small_line[1].find(",") == -1:
-#                         result_list[each + "-" + small_line[1]] =  schedule_link
-#                     else:
-#                         groups = small_line[1].split(",")
-#                         for k in groups:
-#                             result_list[each + "-" + k] =  schedule_link
-#         else:  
-#             if small_line[0].find(",") == -1:
-#                 faculty = small_line[0]
-#                 difFindSit(small_line, schedule_link, result_list, faculty)                
-#             else:
-#                 faculties = small_line[0].split(",")
-#                 for each in faculties:
-#                     difFindSit(small_line, schedule_link, result_list, each)
-                    
-                
-                
-                    
-# def difFindSit(small_line, schedule_link, result_list, faculty): 
-#     counter1 = 1
-#     while (counter1 < len(small_line)):
-#         gr_list = small_line[counter1].split(",")
-#         counter2 = 0;
-#         while (counter2 < len(gr_list) - 1):
-#             result_list[faculty + "-" + gr_list[counter2]] =  schedule_link
-#             counter2 += 1
+        result_list[groups[counter]] =  schedule_link                   
+        col = 0
+        row = 0
+        tmp_row=''
+        for each in groups:
+            if each == groups[counter]:
+                break
+            else:
+                col+=1
+        styles = takingStyles(text)
+        schedule_row = []
+        schedule_string = ''
+        for each in lines:
+                each = each[1:-1]
+                row += 1   
+                getting_line = each.split('","')
+                if getting_line[col] == '':
+                    cell = checkStyles(row - 1, col, styles)
+                    if cell[0] == -1:
+                        getting_line[col] = '    ---'
+                    else:
+                         tmp = lines[cell[0]].split('","')
+                         getting_line[col] = tmp[cell[1]]
+                elif getting_line[col].find('---') != -1 :
+                     getting_line[col] = '    ---'
 
-#         if counter1 == len(small_line) - 1:
-#             result_list[faculty + "-" + gr_list[-1]] =  schedule_link
-#         else:
-#             faculty = gr_list[-1]                            
-#         counter1 += 1
- 
-         
+                if getting_line[1] != '' : 
+                    tmp_row = getting_line[1]
+                else:
+                    getting_line[1] = tmp_row
+                
+                schedule_string += "$"
+                schedule_string += getting_line[1] + "   " + getting_line[col]
+                #schedule_row.append(getting_line[1] + "   " + getting_line[col])                
+        result_list[groups[counter]] =  [schedule_link, schedule_string]
+
+#         print groups[counter]
+#         for each in result_list[groups[counter]]:
+#             print each
+        counter += 1
 
 dataList()
+
 
