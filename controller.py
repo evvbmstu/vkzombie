@@ -103,7 +103,7 @@ def daySchedule( group ):
         lessons_list = weekSchedule( group )
         if lessons_list == "wrong message":
             return " Не удалось найти такое расписание, проверь группу и форму обучения "
-        first_el = (weekday - 1) * 8 + 3
+        first_el = (weekday - 1) * 8 + 2
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
         return dayView( day_lessons )
@@ -120,7 +120,7 @@ def tomorrowSchedule( group ):
         lessons_list = weekSchedule(group)
         if lessons_list == "wrong message":
             return " Не удалось найти такое расписание, проверь группу и форму обучения " 
-        first_el = (weekday - 1) * 8 + 3
+        first_el = (weekday - 1) * 8 + 2
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
         return dayView ( day_lessons )
@@ -134,7 +134,13 @@ def weekSchedule( group ):
     def_weekday = d.isoweekday() - 1  #what is it weekday?
     d = d - timedelta(days = def_weekday) 
     d2 = datetime.now().date()
-    weeknumber = ((d2 - d).days / 7) + 1
+    #HF1
+    cur_weekday = datetime.now().date().isoweekday()
+    if cur_weekday != 7:
+        weeknumber = ((d2 - d).days / 7) + 1
+    else:
+        weeknumber = ((d2 - d).days / 7) + 2
+    #HF1
     week_counter = weeknumber % 2 #'чс' == 1 or 'зн' == 0
     soup = bs(site(schedule_url), 'lxml')
     text = soup.get_text()

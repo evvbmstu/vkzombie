@@ -11,9 +11,9 @@ def site(url):
     return response
     
 def checkCourse(mes):
-    if mes.find(u'Б') != -1 :
-        mes = mes.replace(u'Б', u'')
     mas = mes.split('-')
+    if mas[1].find( u'Б' ) != -1:
+        mas[1] = mas[1].replace(u'Б', u'')
    
     if int(mas[1]) < 30:
         course = 1
@@ -37,18 +37,19 @@ def checkCourse(mes):
 def findSchedule(response, mes):
     schedule_link = 'nothing'
     soup = bs(response, 'html.parser')
-    if mes.find(u'М') == -1:
+    parts = mes.split("-")
+    if parts[1].find( u'М' ) == -1:
         course = checkCourse(mes)
     else:
         course = str(7)
     if course == 0:
         return 'nothing'
-    parts = mes.split("-") #разделяем входное сообщение на номер кафедры и группу
+    #parts = mes.split("-") #разделяем входное сообщение на номер кафедры и группу
     try:
         table = soup.find('div', {'id': 'vt-list-' + course})
+	table1 = table.find('div', {'class': 'col-md-12'})
     except AttributeError:
         return 'nothing'
-    table1 = table.find('div', {'class': 'col-md-12'})
     for row in table1.find_all('tr'):
         for col in row.find_all('td', {'class':'groupname'}):
             mega_line = col.get_text() #все группы из найденного тега

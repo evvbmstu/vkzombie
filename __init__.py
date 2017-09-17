@@ -17,7 +17,10 @@ def processing():
                 api = vk.API( session )
                 user_id = newJson['object']['user_id']
                 text = newJson['object']['body'].encode("utf8")
-                answer = handlers.handler( text, user_id )
+	 	try:
+                    answer = handlers.handler( text, user_id )
+	 	except:
+		    answer = " Упс, что-то пошло не так. Ребята с ИУ уже разбираются. Не обижайтесь, это всё таки бета тест. Возможно вы что-то сделали не так, еще раз почитайте команды )  "
 		print( answer )
 		api.messages.send( access_token = token, 
 				   user_id = str(user_id), 
