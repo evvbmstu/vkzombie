@@ -34,6 +34,7 @@ def dataList():
                 schedule_link = row.find('a',{'class':'j-bold'}).get('href')
                 links.append(schedule_link)         
                 groupsFind(schedule_link, result_list)
+    return result_list
 #     for each in result_list:
 #         print each + "  " + result_list[each]
             
@@ -47,41 +48,42 @@ def groupsFind(schedule_link, result_list):
     groups = lines[0].split('","')
     counter = 3
     while (counter < len(groups)):
-        result_list[groups[counter]] =  schedule_link                   
-        col = 0
-        row = 0
-        tmp_row=''
-        for each in groups:
-            if each == groups[counter]:
-                break
-            else:
-                col+=1
-        styles = takingStyles(text)
-        schedule_row = []
-        schedule_string = ''
-        for each in lines:
-                each = each[1:-1]
-                row += 1   
-                getting_line = each.split('","')
-                if getting_line[col] == '':
-                    cell = checkStyles(row - 1, col, styles)
-                    if cell[0] == -1:
-                        getting_line[col] = '    ---'
-                    else:
-                         tmp = lines[cell[0]].split('","')
-                         getting_line[col] = tmp[cell[1]]
-                elif getting_line[col].find('---') != -1 :
-                     getting_line[col] = '    ---'
-
-                if getting_line[1] != '' : 
-                    tmp_row = getting_line[1]
+        if groups[counter] != " " and groups[counter] != "":
+            result_list[groups[counter]] =  schedule_link                   
+            col = 0
+            row = 0
+            tmp_row=''
+            for each in groups:
+                if each == groups[counter]:
+                    break
                 else:
-                    getting_line[1] = tmp_row
-                
-                schedule_string += "$"
-                schedule_string += getting_line[1] + "   " + getting_line[col]
-                #schedule_row.append(getting_line[1] + "   " + getting_line[col])                
-        result_list[groups[counter]] =  [schedule_link, schedule_string]
+                    col+=1
+            styles = takingStyles(text)
+            schedule_row = []
+            schedule_string = ''
+            for each in lines:
+                    each = each[1:-1]
+                    row += 1   
+                    getting_line = each.split('","')
+                    if getting_line[col] == '':
+                        cell = checkStyles(row - 1, col, styles)
+                        if cell[0] == -1:
+                            getting_line[col] = '    ---'
+                        else:
+                             tmp = lines[cell[0]].split('","')
+                             getting_line[col] = tmp[cell[1]]
+                    elif getting_line[col].find('---') != -1 :
+                         getting_line[col] = '    ---'
+
+                    if getting_line[1] != '' : 
+                        tmp_row = getting_line[1]
+                    else:
+                        getting_line[1] = tmp_row
+
+                    schedule_string += "$"
+                    schedule_string += getting_line[1] + "   " + getting_line[col]
+                    #schedule_row.append(getting_line[1] + "   " + getting_line[col])                
+            result_list[groups[counter]] =  [schedule_link, schedule_string]
 
 #         print groups[counter]
 #         for each in result_list[groups[counter]]:
