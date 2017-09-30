@@ -71,6 +71,8 @@ def handler( string, vkId ):
 	    return results
 	elif check( string, commands['commandsInfo'] ):
 	    return commandsInfoList
+	elif check ( string, commands['tost'] ):
+	    return tostText
 	elif check( string, commands['today'] ):
 	    try:
                 group, surname = getFromDb( vkId )
