@@ -69,7 +69,7 @@ def handler( string, vkId ):
 		return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
             buf = group.split('-');
             number_of_group = re.findall('(\d+)', buf[1])
-            if (number_of_group[0] > 20):  
+            if (int(number_of_group[0]) > 20):  
                 group = buf[0] +'-' + str(int(number_of_group[0]) - 10) + ''.join(re.findall("(\D+)", buf[1]))
             else:
                 return('Твоей группы нет в базе, вбей команду "Cессия <группа с прошлого семестра> <Фамилия>')
@@ -101,6 +101,8 @@ def handler( string, vkId ):
                 return dayView( weekSchedule( group ) )
             else:
                 return " Сегодня выходной, вот расписание на следующую неделю:\n" + dayView( weekSchedule( group ) )
+	elif unicode( string, "utf-8" ).upper() in commands["sport"]:
+	        return SPORT_PHOTOS
 	else:
 	    return " Неверная команда " 
 

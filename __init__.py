@@ -21,10 +21,16 @@ def processing():
                     answer = handlers.handler( text, user_id )
 	 	except:
 		    answer = " Упс, что-то пошло не так. Ребята с ИУ уже разбираются. Не обижайтесь, это всё таки бета тест. Возможно вы что-то сделали не так, еще раз почитайте команды )  "
-		print( answer )
-		api.messages.send( access_token = token, 
-				   user_id = str(user_id), 
-			           message = answer )
+		#print( answer )
+		if answer[0] == 'p':
+		    api.messages.send( access_token = token,
+				       user_id = str(user_id),
+			               message = "Расписание спорткомплекса",
+				       attachment = SPORT_PHOTOS )
+		else:
+		    api.messages.send( access_token = token, 
+				       user_id = str(user_id), 
+			               message = answer )
                 return 'ok'
         elif newJson['type'] == "confirmation":
                 return '9f3fba60'

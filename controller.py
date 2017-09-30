@@ -120,7 +120,7 @@ def tomorrowSchedule( group ):
         lessons_list = weekSchedule(group)
         if lessons_list == "wrong message":
             return " Не удалось найти такое расписание, проверь группу и форму обучения " 
-        first_el = (weekday - 1) * 8 + 3
+        first_el = (weekday - 1) * 8 + 2
         last_el = first_el + 7
         day_lessons = lessons_list[first_el : last_el]
         return dayView ( day_lessons )
