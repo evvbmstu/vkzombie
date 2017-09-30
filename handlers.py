@@ -67,6 +67,12 @@ def handler( string, vkId ):
 	        group, surname = getFromDb( vkId )
 	    except TypeError:
 		return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
+            buf = group.split('-');
+            number_of_group = re.findall('(\d+)', buf[1])
+            if (number_of_group[0] > 20):  
+                group = buf[0] +'-' + str(int(number_of_group[0]) - 10) + ''.join(re.findall("(\D+)", buf[1]))
+            else:
+                return('Твоей группы нет в базе, вбей команду "Cессия <группа с прошлого семестра> <Фамилия>')
 	    results = getResults( group, surname )
 	    return results
 	elif check( string, commands['commandsInfo'] ):
