@@ -92,21 +92,107 @@ def checkIn ( vkId, surname, uid, name = None ):
 	conn.close()
 	return " Вы уже зарегистрированы "
 
-def daySchedule( group ):
-    weekday = datetime.now().date().isoweekday()
-    
-    if weekday == 7:
-        tmp = "Сегодня выходной, отдыхай )\n"
-        tmp1 = "Вот тебе пары на завтра:\n"
-        return tmp + tmp1 + tomorrowSchedule( group )
+
+def shedule_index():
+    d = date(2017, 9, 1) #1 september
+    def_weekday = d.isoweekday() - 1  #what is it weekday?
+    d = d - timedelta(days = def_weekday) 
+    d2 = datetime.now().date()
+    cur_weekday = datetime.now().date().isoweekday()
+    if cur_weekday != 7:
+        weeknumber = ((d2 - d).days / 7) + 1
     else:
-        lessons_list = weekSchedule( group )
-        if lessons_list == "wrong message":
-            return " Не удалось найти такое расписание, проверь группу и форму обучения "
-        first_el = (weekday - 1) * 8 + 2
-        last_el = first_el + 7
-        day_lessons = lessons_list[first_el : last_el]
-        return dayView( day_lessons )
+        weeknumber = ((d2 - d).days / 7) + 2
+    week_counter = weeknumber % 2 #'чс' == 1 or 'зн' == 0
+    return week_counter;
+
+def get_day(group_name):
+    conn = MySQLdb.connect( MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, charset = 'utf8', use_unicode = True )
+    cursor = conn.cursor()
+    query = """ SELECT * FROM shedules WHERE group_name = '{0}'; """
+    cursor.execute(query.format(group_name))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    shedule = str(result).split("$")
+    
+    week_index = shedule_index()
+    day_index = datetime.now().date().isoweekday()
+    if day_index == 7:
+	day_index = 1
+    # return shedule
+    if week_index == 1:
+	return shedule[SHEDULE_INDEX[day_index][0]:SHEDULE_INDEX[day_index][1]][::2]
+    else:
+        return shedule[SHEDULE_INDEX[day_index][0]:SHEDULE_INDEX[day_index][1]][1::2] 
+
+
+def get_weekday(weekday_name,group_name):
+    conn = MySQLdb.connect( MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, charset = 'utf8', use_unicode = True )
+    cursor = conn.cursor()
+    query = """ SELECT * FROM shedules WHERE group_name = '{0}'; """
+    cursor.execute(query.format(group_name))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    shedule = str(result).split("$")
+    week_index = shedule_index()
+    day_index = SHEDULE_NAME[weekday_name]
+    if week_index == 1:
+        return shedule[SHEDULE_INDEX[day_index][0]:SHEDULE_INDEX[day_index][1]][::2]
+    else:
+        return shedule[SHEDULE_INDEX[day_index][0]:SHEDULE_INDEX[day_index][1]][1::2]
+
+
+def get_tommorow(group_name):
+    conn = MySQLdb.connect( MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, charset = 'utf8', use_unicode = True )
+    cursor = conn.cursor()
+    query = """ SELECT * FROM shedules WHERE group_name = '{0}'; """
+    cursor.execute(query.format(group_name))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    shedule = str(result).split("$")
+    
+    week_index = shedule_index()
+    day_index = datetime.now().date().isoweekday() + 1
+    
+    if day_index == 8:
+        day_index = 1
+    
+    if day_index == 7:
+        day_index = 1
+    # add_info = [u'Вот расписание на понедельник']
+    if week_index == 1:
+        return shedule[SHEDULE_INDEX[day_index][0]:SHEDULE_INDEX[day_index][1]][::2]
+    else:
+        return shedule[SHEDULE_INDEX[day_index][0]:SHEDULE_INDEX[day_index][1]][1::2]
+
+def get_week(group_name):
+    d = date(2017, 9, 1) #1 september
+    def_weekday = d.isoweekday() - 1  #what is it weekday?
+    d = d - timedelta(days = def_weekday) 
+    d2 = datetime.now().date()
+    #HF1
+    cur_weekday = datetime.now().date().isoweekday()
+    if cur_weekday != 7:
+        weeknumber = ((d2 - d).days / 7) + 1
+    else:
+        weeknumber = ((d2 - d).days / 7) + 2
+    conn = MySQLdb.connect( MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, charset = 'utf8', use_unicode = True )
+    cursor = conn.cursor()
+    query = """ SELECT * FROM shedules WHERE group_name = '{0}'; """
+    cursor.execute(query.format(group_name))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    shedule = str(result).split("$")
+    week_index = shedule_index()
+    if week_index == 1:
+        return shedule[::2]
+    else:
+        return shedule[1::2]
+
 
 def tomorrowSchedule( group ):
     cur_weekday = datetime.now().date().isoweekday()

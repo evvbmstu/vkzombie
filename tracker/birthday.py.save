@@ -1,0 +1,7 @@
+	import MySQLdb
+
+def get_id():
+    connection = MySQLdb.connect( MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, charset='utf8',use_unicode = True)
+    cursor = connection.cursor()
+    cursor.execute( "SELECT vk_id FROM user;")
+    connection.close()

@@ -42,13 +42,13 @@ def handler( string, vkId ):
                 group, surname = formatter( parts )
             except ValueError:
                 return formatter( parts )
-            return daySchedule( group )
+            return sql_view(get_day(group)) # daySchedule( group )
         elif check( command, commands['tomorrow'] ):
             try:
                 group, surname = formatter( parts )
             except ValueError:
                 return formatter( parts )
-            return tomorrowSchedule( group )
+            return sql_view(get_tommorow(group))
         elif check( command, commands['week'] ):
             try:
                 group, surname = formatter( parts )
@@ -84,13 +84,13 @@ def handler( string, vkId ):
                 group, surname = getFromDb( vkId )
             except TypeError:
                 return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
-	    return daySchedule( group )
+	    return sql_view(get_day(group)) # daySchedule(group) 
 	elif check( string, commands['tomorrow'] ):
 	    try:
                 group, surname = getFromDb( vkId )
             except TypeError:
                 return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
-            return tomorrowSchedule( group )
+            return sql_view(get_tommorow(group)) # tomorrowSchedule( group )
         elif check( string, commands['week'] ):
 	    try:
                 group, surname = getFromDb( vkId )
@@ -103,6 +103,12 @@ def handler( string, vkId ):
                 return " Сегодня выходной, вот расписание на следующую неделю:\n" + dayView( weekSchedule( group ) )
 	elif unicode( string, "utf-8" ).upper() in commands["sport"]:
 	        return SPORT_PHOTOS
+	elif unicode( string, "utf-8" ).upper() in SHEDULE_NAME.keys():
+		try:
+		    group,surname = getFromDb(vkId)
+		except TypeError:
+                    return " Чтобы пользоваться такими командами нужно зарегистрироваться. Можно узнать как это сделать если написать: команды"
+	        return sql_view(get_weekday(unicode( string, "utf-8" ).upper(),group))
 	else:
 	    return " Неверная команда " 
 
