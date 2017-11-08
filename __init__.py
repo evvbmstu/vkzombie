@@ -5,7 +5,9 @@ import vk
 import sys
 import json
 import handlers
-import dash
+import jsonpickle
+import numpy as np
+import cv2
 app = Flask( __name__ )
 
 @app.route("/poll", methods = ['POST'])
@@ -34,6 +36,24 @@ def processing():
                 return 'ok'
         elif newJson['type'] == "confirmation":
                 return '9f3fba60'
+
+@app.route("/video_test", methods = ['POST'])
+def video_test():
+    r = request
+    # convert string of image data to uint8
+    nparr = np.fromstring(r.data, np.uint8)
+    # decode image
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    # do some fancy processing here....
+
+    # build a response dict to send back to client
+    response = {'message': 'image received. size={}x{}'.format(img.shape[1], img.shape[0])
+                }
+    # encode response using jsonpickle
+    response_pickled = jsonpickle.encode(response)
+
+    return Response(response=response_pickled, status=200, mimetype="application/json")
 
 if __name__ == "__main__":
     app.run()
