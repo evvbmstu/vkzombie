@@ -6,7 +6,6 @@
 
 import requests
 from bs4 import BeautifulSoup as bs
-from datetime import time
 from schedule import takingData, takingStyles, checkStyles
 
 url = 'http://www.bmstu.ru/mstu/undergraduate/schedule/table-view/'
@@ -35,8 +34,7 @@ def dataList():
                 links.append(schedule_link)         
                 groupsFind(schedule_link, result_list)
     return result_list
-#     for each in result_list:
-#         print each + "  " + result_list[each]
+
             
 
 def groupsFind(schedule_link, result_list):
