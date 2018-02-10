@@ -42,13 +42,13 @@ def handler( string, vkId ):
                 group, surname = formatter( parts )
             except ValueError:
                 return formatter( parts )
-            return daySchedule( group )
+            return sql_view(get_day(group)) # daySchedule( group )
         elif check( command, commands['tomorrow'] ):
             try:
                 group, surname = formatter( parts )
             except ValueError:
                 return formatter( parts )
-            return tomorrowSchedule( group )
+            return sql_view(get_tommorow(group))
         elif check( command, commands['week'] ):
             try:
                 group, surname = formatter( parts )
@@ -67,22 +67,30 @@ def handler( string, vkId ):
 	        group, surname = getFromDb( vkId )
 	    except TypeError:
 		return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
+            buf = group.split('-');
+            number_of_group = re.findall('(\d+)', buf[1])
+            if (int(number_of_group[0]) > 20):  
+                group = buf[0] +'-' + str(int(number_of_group[0]) - 10) + ''.join(re.findall("(\D+)", buf[1]))
+            else:
+                return('Твоей группы нет в базе, вбей команду "Cессия <группа с прошлого семестра> <Фамилия>')
 	    results = getResults( group, surname )
 	    return results
 	elif check( string, commands['commandsInfo'] ):
 	    return commandsInfoList
+	elif check ( string, commands['tost'] ):
+	    return tostText
 	elif check( string, commands['today'] ):
 	    try:
                 group, surname = getFromDb( vkId )
             except TypeError:
                 return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
-	    return daySchedule( group )
+	    return sql_view(get_day(group)) # daySchedule(group) 
 	elif check( string, commands['tomorrow'] ):
 	    try:
                 group, surname = getFromDb( vkId )
             except TypeError:
                 return " В базе данных тебя еще нет. Зарегистрируйся чтобы пользоваться короткими командами "
-            return tomorrowSchedule( group )
+            return sql_view(get_tommorow(group)) # tomorrowSchedule( group )
         elif check( string, commands['week'] ):
 	    try:
                 group, surname = getFromDb( vkId )
@@ -93,6 +101,14 @@ def handler( string, vkId ):
                 return dayView( weekSchedule( group ) )
             else:
                 return " Сегодня выходной, вот расписание на следующую неделю:\n" + dayView( weekSchedule( group ) )
+	elif unicode( string, "utf-8" ).upper() in commands["sport"]:
+	        return SPORT_PHOTOS
+	elif unicode( string, "utf-8" ).upper() in SHEDULE_NAME.keys():
+		try:
+		    group,surname = getFromDb(vkId)
+		except TypeError:
+                    return " Чтобы пользоваться такими командами нужно зарегистрироваться. Можно узнать как это сделать если написать: команды"
+	        return sql_view(get_weekday(unicode( string, "utf-8" ).upper(),group))
 	else:
 	    return " Неверная команда " 
 

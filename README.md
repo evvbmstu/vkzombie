@@ -13,7 +13,7 @@ Resurrected with the help of new technologies, Nikolai Ernestovich Bauman is cal
     - [x] Расписание на сегодня
     - [x] Расписание на завтра
   - [x] Расписание на неделю.
-  - [ ] Расписание спортивного комплекса.
+  - [x] Расписание спортивного комплекса.
   - [ ] Расписание больницы
 
 # Commands:

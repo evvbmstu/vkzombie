@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from tabulate import tabulate
+import re
+
 
 def resultsView( exams, credit, course ):
     stab = "----------------------------------------------------------"
@@ -41,3 +43,17 @@ def dayView( timetable ):
     if len( answer ) == 14:
 	return " Не смогли найти расписание. Проверь группу и форму обучения ( бакалавр/специалист/магистр )."
     return answer
+
+def sql_view(timetable):
+    if timetable == "wrong message":
+        return " Не смогли найти расписание. Проверь группу и форму обучения ( бакалавр/специалист/магистр )."
+    answer = ""
+    for row in timetable:
+        # if re.match("\d+',row) is not None:
+        answer += row.decode("unicode-escape") + "\n"
+        #else:
+  	#    answer += row
+    if len( answer ) == 14:
+        return " Не смогли найти расписание. Проверь группу и форму обучения ( бакалавр/специалист/магистр )."
+    return answer
+
