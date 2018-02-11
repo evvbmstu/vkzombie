@@ -148,3 +148,5 @@ Thumbs.db
 # Local settings #
 ######################
 settings.py
+
+/.idea/*
