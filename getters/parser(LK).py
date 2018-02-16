@@ -48,21 +48,36 @@ def parser():
                     i += 1
                     continue
 
+                if i == 3:
+                    schedule_string += '$8:30-10:05 '
+                elif i == 4:
+                    schedule_string += '$10:15-11:50 '
+                elif i == 5:
+                    schedule_string += '$12:00-13:35 '
+                elif i == 6:
+                    schedule_string += '$13:50-15:25 '
+                elif i == 7:
+                    schedule_string += '$15:40-17:15 '
+                elif i == 8:
+                    schedule_string += '$17:25-19:00 '
+                elif i == 9:
+                    schedule_string += '$19:10-20:45 '
+                            
                 #Сначала ищем пары, которые есть и в ЧС и в ЗН
                 if row.find('td',{"colspan":"2"}) != None:
-                    schedule_string += "$" + row.find('td',{"colspan":"2"}).get_text().replace("\xa0", " ")
-                    schedule_string += "$" + row.find('td',{"colspan":"2"}).get_text().replace("\xa0", " ")
+                    schedule_string += row.find('td',{"colspan":"2"}).get_text().replace("\xa0", " ")
+                    schedule_string += row.find('td',{"colspan":"2"}).get_text().replace("\xa0", " ")
 
                 #Далее ищем пары, которые есть только или в ЧС или в ЗН, иначе записываем в строк прочерк
                 else:
                     if row.find('td',{"class":"text-success"}) != None:
-                        schedule_string += "$" + row.find('td',{"class":"text-success"}).get_text().replace("\xa0", " ")
+                        schedule_string += row.find('td',{"class":"text-success"}).get_text().replace("\xa0", " ")
                     else:
-                        schedule_string += "$ - "
+                        schedule_string += " - "
                     if row.find('td',{"class":"text-info"}) != None:
-                        schedule_string += "$" + row.find('td',{"class":"text-info"}).get_text().replace("\xa0", " ")
+                        schedule_string += row.find('td',{"class":"text-info"}).get_text().replace("\xa0", " ")
                     else:
-                        schedule_string += "$ - "
+                        schedule_string += " - "
 
         schedule[each] = [urls[each], schedule_string]
     return schedule
